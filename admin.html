@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(to right, #1d3557, #457b9d);
+      padding: 30px;
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+      color: #000;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #eee;
+    }
+
+    input, select, button {
+      padding: 8px;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .actions button {
+      width: auto;
+      margin: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<h3>Create / Update User</h3>
+<input id="u" placeholder="Username">
+<input id="p" placeholder="Password">
+<select id="r">
+  <option value="admin">Admin</option>
+  <option value="lecturer">Lecturer</option>
+  <option value="student">Student</option>
+</select>
+<button onclick="saveUser()">Save User</button>
+
+<button onclick="location.href='login.html'">Logout</button>
+
+<h3>Users</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="users"></tbody>
+</table>
+
+<script>
+let editIndex = null;
+
+/* -------------------------------
+   GET USERS SAFELY
+-------------------------------- */
+function getUsers() {
+  return JSON.parse(localStorage.getItem("users")) || [];
+}
+
+/* -------------------------------
+   SAVE (CREATE / UPDATE) USER
+-------------------------------- */
+function saveUser() {
+  const username = u.value.trim();
+  const password = p.value.trim();
+  const role = r.value;
+
+  if (!username || !password) {
+    alert("Username and password are required");
+    return;
+  }
+
+  const users = getUsers();
+
+  if (editIndex === null) {
+    if (users.find(x => x.username === username)) {
+      alert("Username already exists");
+      return;
+    }
+
+    users.push({
+      username,
+      password,
+      role,
+      enabled: true
+    });
+  } else {
+    users[editIndex].username = username;
+    users[editIndex].password = password;
+    users[editIndex].role = role;
+    editIndex = null;
+  }
+
+  localStorage.setItem("users", JSON.stringify(users));
+  clearForm();
+  loadUsers();
+}
+
+/* -------------------------------
+   LOAD USERS
+-------------------------------- */
+function loadUsers() {
+  const users = getUsers();
+  const tbody = document.getElementById("users");
+
+  tbody.innerHTML = users.map((x, i) => `
+    <tr>
+      <td>${x.username}</td>
+      <td>${x.role}</td>
+      <td>${x.enabled ? "Enabled" : "Disabled"}</td>
+      <td class="actions">
+        <button onclick="editUser(${i})">Edit</button>
+        <button onclick="toggleUser(${i})">
+          ${x.enabled ? "Disable" : "Enable"}
+        </button>
+        <button onclick="deleteUser(${i})">Delete</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+/* -------------------------------
+   EDIT USER
+-------------------------------- */
+function editUser(index) {
+  const users = getUsers();
+  const user = users[index];
+
+  u.value = user.username;
+  p.value = user.password;
+  r.value = user.role;
+  editIndex = index;
+}
+
+/* -------------------------------
+   ENABLE / DISABLE USER
+-------------------------------- */
+function toggleUser(index) {
+  const users = getUsers();
+  users[index].enabled = !users[index].enabled;
+  localStorage.setItem("users", JSON.stringify(users));
+  loadUsers();
+}
+
+/* -------------------------------
+   DELETE USER
+-------------------------------- */
+function deleteUser(index) {
+  if (!confirm("Are you sure you want to delete this user?")) return;
+
+  const users = getUsers();
+  users.splice(index, 1);
+  localStorage.setItem("users", JSON.stringify(users));
+  loadUsers();
+}
+
+/* -------------------------------
+   CLEAR FORM
+-------------------------------- */
+function clearForm() {
+  u.value = "";
+  p.value = "";
+  r.value = "student";
+}
+
+/* -------------------------------
+   INITIAL LOAD
+-------------------------------- */
+loadUsers();
+</script>
+
+</body>
+</html>

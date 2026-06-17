@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+   <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<div class="box">
+  <h2>System Login</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<script>
+if (!localStorage.getItem("users")) {
+  localStorage.setItem("users", JSON.stringify([
+    { username:"admin", password:"admin123", role:"admin", enabled:true }
+  ]));
+}
+
+function login() {
+  const users = JSON.parse(localStorage.getItem("users"));
+  const user = users.find(u =>
+    u.username === username.value &&
+    u.password === password.value &&
+    u.enabled
+  );
+
+  if (!user) return alert("Invalid credentials or account disabled");
+
+  if (user.role === "admin") location.href = "admin.html";
+  if (user.role === "lecturer") location.href = "lecturer.html";
+  if (user.role === "student") location.href = "student.html";
+}
+</script>
+
+</body>
+</html>

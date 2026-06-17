@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lecturer Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Lecturer Attendance Dashboard</h2>
+  
+
+  <div id="status" class="status closed">Attendance is CLOSED</div>
+
+  <div class="controls">
+    <button id="startBtn">Start Attendance</button>
+    <button id="stopBtn" disabled>Stop Attendance</button>
+    <button onclick="location.href = 'login.html' ">Logout</button>
+  </div>
+
+  <h3>Live Attendance Records</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Class</th>
+        <th>IP Address</th>
+        <th>Time</th>
+        <th>Date</th>
+        <th>Location (Lat, Long)</th>
+      </tr>
+    </thead>
+    <tbody id="attendanceTable"></tbody>
+  </table>
+</div>
+
+<script src="lecturer.js"></script>
+</body>
+</html>

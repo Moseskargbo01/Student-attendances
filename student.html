@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Attendance List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Student Attendance Form</h2>
+
+  <div id="status" class="status closed">Attendance is CLOSED</div>
+  <div id="timer" class="timer">00:00</div>
+
+  <form id="attendanceForm">
+    <input type="text" id="fname" placeholder="Full Name" required>
+    <input type="text" id="studentId" placeholder="Student ID" required>
+    <input type="text" id="className" placeholder="Class" required>
+    <button type="submit" disabled>Submit Attendance</button>
+    <button onclick="location.href = 'login.html' ">Logout</button>
+  </form>
+
+  <p id="message"></p>
+</div>
+
+<script src="student.js"></script>
+</body>
+</html>
